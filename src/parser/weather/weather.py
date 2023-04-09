@@ -76,6 +76,9 @@ class ParseWeather:
             )
         ]
 
+        # Значение там хранится только на время обработки html
+        del self.cache_town_soup[town]
+
         res = DailyWeather(town_name=town, list_weather_hours=list_weather)
 
         return str(res)
