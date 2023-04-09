@@ -35,12 +35,8 @@ class VkBot:
             self.vk_session = vk_api.VkApi(token=_token)
             self.longpoll = VkLongPoll(self.vk_session)
         except ApiError as e:
-            print(
-                f"Не удалось подключиться к указанной группе. Код ошибки:\n{e}"
-            )
-            logger.exception(
-                "Не удалось подключиться к указанной группе. Код ошибки:"
-            )
+            print(f"Не удалось подключиться к указанной группе. Код ошибки:\n{e}")
+            logger.exception("Не удалось подключиться к указанной группе. Код ошибки:")
             logger.exception(e)
             exit(3)
 
@@ -52,11 +48,11 @@ class VkBot:
 
     def _get_new_message(self, event: VkLongPoll.DEFAULT_EVENT_CLASS) -> None:
         try:
-            logger.info(f"Пользователь {event.user_id} прислал сообщение: '{event.text}'")
-
-            MessageHandler.create(event.text).send_message(
-                event.user_id
+            logger.info(
+                f"Пользователь {event.user_id} прислал сообщение: '{event.text}'"
             )
+
+            MessageHandler.create(event.text).send_message(event.user_id)
         except Exception as e:
             logger.exception(e)
             logger.exception(
@@ -66,7 +62,6 @@ class VkBot:
     def main(self):
         # Основной цикл
         for event in self.longpoll.listen():
-
             # Если пришло новое сообщение
             if (
                 event.type == VkEventType.MESSAGE_NEW
@@ -74,7 +69,6 @@ class VkBot:
                 and event.from_user
             ):
                 self._get_new_message(event)
-
 
 
 if __name__ == "__main__":

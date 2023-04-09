@@ -25,9 +25,7 @@ class ParseWeather:
     def _get_list_time(self, town: str) -> list[(str, str)]:
         soup = self.cache_town_soup[town]
 
-        block_time = soup.find(class_="widget-row-time").find_all(
-            class_="row-item"
-        )
+        block_time = soup.find(class_="widget-row-time").find_all(class_="row-item")
         res = [
             (time.text[:-2].strip(), time.find(class_="time-sup").text.strip())
             for time in block_time
@@ -37,9 +35,7 @@ class ParseWeather:
     def _get_list_status(self, town: str) -> list[str]:
         soup = self.cache_town_soup[town]
 
-        block_status = soup.find(class_="widget-row-icon").find_all(
-            class_="row-item"
-        )
+        block_status = soup.find(class_="widget-row-icon").find_all(class_="row-item")
 
         res = [
             status.find(class_="weather-icon")["data-text"].strip()
@@ -51,9 +47,9 @@ class ParseWeather:
     def _get_list_temperature(self, town: str) -> list[str]:
         soup = self.cache_town_soup[town]
 
-        block_temperature = soup.find(
-            class_="widget-row-chart-temperature"
-        ).find_all(class_="value")
+        block_temperature = soup.find(class_="widget-row-chart-temperature").find_all(
+            class_="value"
+        )
 
         res = [
             temperature.find(class_="unit unit_temperature_c").text.strip()
@@ -75,6 +71,9 @@ class ParseWeather:
                 list_time, list_temperature, list_status
             )
         ]
+
+        # Значение там хранится только на время обработки html
+        del self.cache_town_soup[town]
 
         res = DailyWeather(town_name=town, list_weather_hours=list_weather)
 

@@ -17,6 +17,7 @@ logging.basicConfig(
     encoding="utf-8",
 )
 
+
 class MessageHandler(abc.ABC):
     _REGISTRY = {}
 
@@ -26,15 +27,17 @@ class MessageHandler(abc.ABC):
 
     @classmethod
     def register(cls, name: str):
-        def decorator(klass: 'MessageHandler') -> 'MessageHandler':
-            logger.info(f"Зарегистрируем VkHandler '{klass.__name__}' под именем '{name}'")
+        def decorator(klass: "MessageHandler") -> "MessageHandler":
+            logger.info(
+                f"Зарегистрируем VkHandler '{klass.__name__}' под именем '{name}'"
+            )
             cls._REGISTRY[name] = klass
             return klass
 
         return decorator
 
     @classmethod
-    def create(cls, message_type: str) -> 'MessageHandler':
+    def create(cls, message_type: str) -> "MessageHandler":
         klass = cls._REGISTRY.get(message_type)
 
         if klass is None:
@@ -45,7 +48,6 @@ class MessageHandler(abc.ABC):
     @classmethod
     def set_vk_session(cls, vk_session: vk_api.VkApi) -> None:
         cls.vk = vk_session.get_api()
-
 
 
 @MessageHandler.register("start")
