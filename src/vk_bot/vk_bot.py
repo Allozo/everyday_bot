@@ -6,8 +6,6 @@ from vk_api.exceptions import ApiError
 from config import VK_BOT_TOKEN
 from src.vk_bot.handlers import MessageHandler
 
-import schedule
-
 
 logger = logging.getLogger(__name__)
 

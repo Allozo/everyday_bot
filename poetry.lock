@@ -347,18 +347,6 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
-name = "schedule"
-version = "1.1.0"
-description = "Job scheduling for humans."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "schedule-1.1.0-py2.py3-none-any.whl", hash = "sha256:617adce8b4bf38c360b781297d59918fbebfb2878f1671d189f4f4af5d0567a4"},
-    {file = "schedule-1.1.0.tar.gz", hash = "sha256:e6ca13585e62c810e13a08682e0a6a8ad245372e376ba2b8679294f377dfc8e4"},
-]
-
-[[package]]
 name = "soupsieve"
 version = "2.4"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -433,4 +421,4 @@ vkstreaming = ["websocket-client"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "36fe289313918be0ffcef1394e7accb31aecbeaffbc883b55764a871463c8b24"
+content-hash = "9886bda0dec4faea5cb197f697bd7a4f353307e38f304acb4a032f8adacd5197"
