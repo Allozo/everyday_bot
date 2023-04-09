@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  vk_bot:
+    container_name: vk_bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - everyday_bot:/home/code/logs
+
+volumes:
+  everyday_bot:
