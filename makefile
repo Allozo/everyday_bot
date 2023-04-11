@@ -1,21 +1,14 @@
-TESTS = tests/
+TESTS = tests
 
 
-VENV ?= .venv
 CODE = tests src
 
 
 .PHONY: venv
 venv:
-ifeq ($(OS), Windows_NT)
 	python -m pip install --upgrade pip
 	python -m pip install poetry
 	poetry install
-else
-	python3.10 -m pip install --upgrade pip
-	python3.10 -m pip install poetry
-	poetry install
-endif
 
 
 .PHONY: test

@@ -14,7 +14,6 @@ ENV POETRY_VERSION=1.3.2 \
     # Don't periodically check PyPI to determine whether a new version of pip is available for download.
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100
-    # VK_GROUP_TOKEN=${VK_GROUP_TOKEN}
 
 
 ARG ENVIRONMENT=production
