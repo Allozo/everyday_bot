@@ -21,7 +21,7 @@ class DailyWeather(BaseModel):
         validate_assignment = True
 
     def __str__(self) -> str:
-        return "\n".join(
-            [f"Погода в городе: {self.town_name}"]
+        return '\n'.join(
+            [f'Погода в городе: {self.town_name}']
             + [str(weather) for weather in self.list_weather_hours]
         )

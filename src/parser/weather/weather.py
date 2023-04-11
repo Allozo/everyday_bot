@@ -1,33 +1,33 @@
 import requests
 from bs4 import BeautifulSoup
 
-from src.parser.weather.schemas import WeatherHours, DailyWeather
+from src.parser.weather.schemas import DailyWeather, WeatherHours
 
 
 class ParseWeather:
     def __init__(self) -> None:
         self.dict_town_url = {
-            "Москва": "https://www.gismeteo.ru/weather-moscow-4368/",
-            "Санкт-Петербург": "https://www.gismeteo.ru/weather-sankt-peterburg-4079/",
+            'Москва': 'https://www.gismeteo.ru/weather-moscow-4368/',
+            'Санкт-Петербург': 'https://www.gismeteo.ru/weather-sankt-peterburg-4079/',
         }
 
         self.cache_town_soup: dict[str, BeautifulSoup] = {}
 
     def _load_html(self, town: str) -> None:
         header = {
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
-            "referer": "https://www.google.com/",
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',  # pylint: disable=line-too-long
+            'referer': 'https://www.google.com/',
         }
 
-        res = requests.get(self.dict_town_url[town], headers=header)
-        self.cache_town_soup[town] = BeautifulSoup(res.content, "html.parser")
+        res = requests.get(self.dict_town_url[town], headers=header, timeout=5)
+        self.cache_town_soup[town] = BeautifulSoup(res.content, 'html.parser')
 
-    def _get_list_time(self, town: str) -> list[(str, str)]:
+    def _get_list_time(self, town: str) -> list[tuple[str, str]]:
         soup = self.cache_town_soup[town]
 
-        block_time = soup.find(class_="widget-row-time").find_all(class_="row-item")
+        block_time = soup.find(class_='widget-row-time').find_all(class_='row-item')
         res = [
-            (time.text[:-2].strip(), time.find(class_="time-sup").text.strip())
+            (time.text[:-2].strip(), time.find(class_='time-sup').text.strip())
             for time in block_time
         ]
         return res
@@ -35,10 +35,10 @@ class ParseWeather:
     def _get_list_status(self, town: str) -> list[str]:
         soup = self.cache_town_soup[town]
 
-        block_status = soup.find(class_="widget-row-icon").find_all(class_="row-item")
+        block_status = soup.find(class_='widget-row-icon').find_all(class_='row-item')
 
         res = [
-            status.find(class_="weather-icon")["data-text"].strip()
+            status.find(class_='weather-icon')['data-text'].strip()
             for status in block_status
         ]
 
@@ -47,12 +47,12 @@ class ParseWeather:
     def _get_list_temperature(self, town: str) -> list[str]:
         soup = self.cache_town_soup[town]
 
-        block_temperature = soup.find(class_="widget-row-chart-temperature").find_all(
-            class_="value"
+        block_temperature = soup.find(class_='widget-row-chart-temperature').find_all(
+            class_='value'
         )
 
         res = [
-            temperature.find(class_="unit unit_temperature_c").text.strip()
+            temperature.find(class_='unit unit_temperature_c').text.strip()
             for temperature in block_temperature
         ]
 
@@ -77,15 +77,15 @@ class ParseWeather:
 
         res = DailyWeather(town_name=town, list_weather_hours=list_weather)
 
-        return str(res)
+        return res
 
 
-def main():
+def main() -> None:
     weather = ParseWeather()
 
-    print(weather.get_weather_on_day("Москва"))
-    print(weather.get_weather_on_day("Санкт-Петербург"))
+    print(weather.get_weather_on_day('Москва'))
+    print(weather.get_weather_on_day('Санкт-Петербург'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
