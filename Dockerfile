@@ -35,4 +35,4 @@ RUN poetry config virtualenvs.create false \
 
 COPY . .
 
-CMD ["poetry", "run", "python", "-m", "src.vk_bot.vk_bot"]
+# CMD ["poetry", "run", "python", "-m", "src.vk_bot.vk_bot"]

@@ -3,11 +3,14 @@ version: '3.8'
 services:
   vk_bot:
     container_name: vk_bot
+    env_file:
+    - .env
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - everyday_bot:/home/code/logs
+    command: poetry run python -m src.vk_bot.vk_bot
 
 volumes:
   everyday_bot:

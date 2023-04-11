@@ -43,7 +43,7 @@ def test_get_weather_on_day(pw):
         ]
     )
 
-    assert pw.get_weather_on_day(TOWN) == res
+    assert str(pw.get_weather_on_day(TOWN)) == res
 
 
 def test_get_list_time(pw):
