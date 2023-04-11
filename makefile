@@ -11,7 +11,7 @@ venv:
 	poetry install
 
 
-.PHONY: test
+.PHONY: tests
 test: ## Runs pytest
 	poetry run python -m pytest $(TESTS)
 
