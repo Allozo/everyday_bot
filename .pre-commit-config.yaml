@@ -1,0 +1,87 @@
+default_language_version:
+    python: python3.10
+default_stages: [commit, push]
+files: ''
+exclude: '^.txt$'
+fail_fast: false
+
+repos:
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+    rev: v4.4.0
+    hooks:
+      # проверяет наличие переноса строки в конце всех текстовых файлов
+      - id: end-of-file-fixer
+      # предупреждает о добавлении больших файлов в Git
+      - id: check-added-large-files
+      # предупреждает о сохранении файлов с UTF-8 BOM
+      - id: check-byte-order-marker
+      # предотвращает сохранение приватных ключей
+      - id: detect-private-key
+      # проверяет, что файлы, которые мы собираемся сохранять, как минимум валидный Python
+      - id: check-ast
+
+  - repo: local
+    hooks:
+      - id: flake8
+        name: flake8
+        entry: flake8
+        language: system
+        args:
+          [
+            "--jobs=4",
+            "--statistics",
+            "--show-source",
+            "src",
+            "tests",
+          ]
+        types: [ python ]
+
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        args:
+          [
+            "--jobs=4",
+            "--rcfile=setup.cfg",
+            "src",
+            "tests"
+          ]
+        types: [ python ]
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        args:
+          [
+            "--install-types"
+          ]
+        types: [ python ]
+
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: system
+        args:
+          [
+            "--skip-string-normalization",
+            "--check",
+            "src",
+            "tests"
+          ]
+        types: [ python ]
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest tests
+        language: system
+        types: [ python ]
