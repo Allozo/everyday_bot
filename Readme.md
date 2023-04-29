@@ -125,7 +125,7 @@ poetry run python -m pytest --cov=src tests
 Также тесты можно запустить в отдельном Docker контейнере:
 
 ```shell
-docker-compose -f docker-compose-test.yaml up --build -d
+docker-compose -f docker-compose-test.yaml --env-file .env.test up --build -d
 ```
 
 ### Запуск линтеров
