@@ -4,7 +4,7 @@ services:
   test_parse_weather:
     container_name: test_parse_weather
     env_file:
-    - .env
+    - .env.test
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,13 +20,13 @@ services:
   test_redis:
     container_name: test_redis
     image: redis:latest
-    command: --port 6300
+    command: --port ${TEST_REDIS_PORT}
     ports:
-      - 6300:6300
+      - ${TEST_REDIS_PORT}:${TEST_REDIS_PORT}
     networks:
       - test_everyday_bot
     healthcheck:
-      test: ["CMD", "redis-cli", "-p", "6300", "ping"]
+      test: ["CMD", "redis-cli", "-p", "${TEST_REDIS_PORT}", "ping"]
       interval: 1s
       timeout: 1s
       retries: 5
