@@ -1,8 +1,10 @@
+import sys
 from pathlib import Path
 
 import pytest
-from bs4 import BeautifulSoup
 
+from config import Test
+from src.cache.base_cache import BaseCache
 from src.parser.weather.weather import ParseWeather
 
 # Тестируем на сохранённой HTML Москвы
@@ -11,19 +13,33 @@ TOWN = 'Москва'
 
 @pytest.fixture()
 def pw(mocker):
-    # Сохраним во внутренний словарик ParseWeather html
-    with Path('tests/parser/weather/html/test_weather_moscow.html').open(
-        encoding='utf-8'
-    ) as f:
+    path_html_test = 'tests/parser/weather/html/test_weather_moscow.html'
+    with Path(path_html_test).open(encoding='utf-8') as f:
         html = f.readlines()
 
-    parse_weather = ParseWeather()
-    parse_weather.cache_town_soup[TOWN] = BeautifulSoup(str(html), 'html.parser')
+    if Test.TYPE_CACHE == 'DICT':
+        cache = BaseCache.create_cache(type_cache=Test.TYPE_CACHE)
+    elif (
+        Test.TYPE_CACHE == 'REDIS'
+        and Test.REDIS_HOST is not None
+        and Test.REDIS_PORT is not None
+    ):
+        cache = BaseCache.create_cache(
+            type_cache=Test.TYPE_CACHE,
+            kwargs={'host': Test.REDIS_HOST, 'port': Test.REDIS_PORT},
+        )
+    else:
+        sys.exit(f'Передали не корректный кэш {Test.TYPE_CACHE=}')
 
-    # Замокируем вызов _load_html()
+    parse_weather = ParseWeather(cache=cache)
+
+    # Сохраним в Redis загруженную html
+    parse_weather.cache_town_soup.set(TOWN, str(html))
+
+    # Замокируем вызов _load_html_in_cache()
     mocker.patch(
-        'src.parser.weather.weather.ParseWeather._load_html'
-    ).return_value = html
+        'src.parser.weather.weather.ParseWeather._load_html_in_cache'
+    ).return_value = None
 
     return parse_weather
 
