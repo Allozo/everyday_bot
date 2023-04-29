@@ -33,6 +33,9 @@ jobs:
     - name: Test with pytest
       run: |
         poetry run python -m pytest -vv tests
+    - name: Test with docker-compose dict
+      run: |
+        docker-compose -f docker-compose-test-weather-dict.yaml up --build -d
     - name: Test with docker-compose Redis
       run: |
-        docker-compose -f docker-compose-test.yaml --env-file .env.test up --build -d
+        docker-compose -f docker-compose-test-weather-redis.yaml up --build -d

@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-load_dotenv('.env.test')
+load_dotenv('./config/.env.test')
 
 
 class Production:

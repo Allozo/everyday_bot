@@ -1,13 +1,15 @@
 version: '3.8'
 
 services:
-  test_parse_weather:
+  test_parse_weather_redis:
     container_name: test_parse_weather
-    env_file:
-    - .env.test
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - TEST_TYPE_CACHE=REDIS
+      - TEST_REDIS_HOST=test_redis
+      - TEST_REDIS_PORT=630
     volumes:
       - test_parse_weather:/home/code/logs
     command: poetry run python -m pytest --cov=src tests/
@@ -20,13 +22,13 @@ services:
   test_redis:
     container_name: test_redis
     image: redis:latest
-    command: --port ${TEST_REDIS_PORT}
+    command: --port 6300
     ports:
-      - ${TEST_REDIS_PORT}:${TEST_REDIS_PORT}
+      - 6300:6300
     networks:
       - test_everyday_bot
     healthcheck:
-      test: ["CMD", "redis-cli", "-p", "${TEST_REDIS_PORT}", "ping"]
+      test: ["CMD", "redis-cli", "-p", "6300", "ping"]
       interval: 1s
       timeout: 1s
       retries: 5
