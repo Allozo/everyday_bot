@@ -6,18 +6,28 @@ from typing import Callable, Type
 
 import vk_api
 
+from config import Production
+from src.cache.base_cache import BaseCache
 from src.parser.weather.weather import ParseWeather
 from src.vk_bot.keyboard import KeyboardBot
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(
-    level=logging.INFO,
-    filename='logs/app.log',
-    filemode='a',
-    format='%(name)s - %(asctime)s - %(levelname)s - %(message)s',
-    encoding='utf-8',
-)
+if Production.TYPE_CACHE == 'DICT':
+    cache = BaseCache.create_cache(type_cache=Production.TYPE_CACHE)
+elif (
+    Production.TYPE_CACHE == 'REDIS'
+    and Production.REDIS_HOST is not None
+    and Production.REDIS_PORT is not None
+):
+    cache = BaseCache.create_cache(
+        type_cache=Production.TYPE_CACHE,
+        kwargs={'host': Production.REDIS_HOST, 'port': Production.REDIS_PORT},
+    )
+else:
+    sys.exit(f'Передали не корректный кэш {Production.TYPE_CACHE=}')
+
+parse_weather = ParseWeather(cache=cache)
 
 
 class MessageHandler(abc.ABC):
@@ -111,7 +121,7 @@ class MailingHandler(MessageHandler):
 @MessageHandler.register('update')
 class UpdateHandler(MessageHandler):
     def send_message(self, user_id: int) -> None:
-        message = str(ParseWeather().get_weather_on_day('Москва'))
+        message = str(parse_weather.get_weather_on_day('Москва'))
         self.vk.messages.send(
             user_id=user_id,
             message=message,

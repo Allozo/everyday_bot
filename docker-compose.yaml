@@ -11,6 +11,27 @@ services:
     volumes:
       - everyday_bot:/home/code/logs
     command: poetry run python -m src.vk_bot.vk_bot
+    networks:
+      - everyday_bot
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    networks:
+      - everyday_bot
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 1s
+      retries: 5
+
+networks:
+  everyday_bot:
+    name: everyday_bot
 
 volumes:
   everyday_bot:
