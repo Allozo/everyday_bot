@@ -5,7 +5,7 @@ import vk_api
 from vk_api.exceptions import ApiError
 from vk_api.longpoll import VkEventType, VkLongPoll
 
-from config import Production
+from src.config import ModelVkBot
 from src.vk_bot.handlers import MessageHandler
 
 logger = logging.getLogger(__name__)
@@ -73,8 +73,6 @@ class VkBot:
 
 
 if __name__ == '__main__':
-    if Production.VK_BOT_TOKEN is None:
-        print('Не передан токен')
-        sys.exit()
-    bot = VkBot(Production.VK_BOT_TOKEN)
+    vk_bot_data = ModelVkBot()  # type: ignore
+    bot = VkBot(vk_bot_data.VK_BOT_TOKEN)
     bot.main()
