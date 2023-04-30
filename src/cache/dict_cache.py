@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 @BaseCache.register('DICT')
 class DictCache(BaseCache):
-    def __init__(self) -> None:
+    def __init__(self, **kwargs: dict[str, str]) -> None:  # pylint: disable=W0613
         logger.info('Создадим {%s}', self.__class__.__name__)
         self._cache: dict[str, str] = {}
         self._time_expire: dict[str, dict[str, int]] = {}

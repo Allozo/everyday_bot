@@ -6,26 +6,18 @@ from typing import Callable, Type
 
 import vk_api
 
-from config import Production
 from src.cache.base_cache import BaseCache
+from src.config import ModelProdCache
 from src.parser.weather.weather import ParseWeather
 from src.vk_bot.keyboard import KeyboardBot
 
 logger = logging.getLogger(__name__)
 
-if Production.TYPE_CACHE == 'DICT':
-    cache = BaseCache.create_cache(type_cache=Production.TYPE_CACHE)
-elif (
-    Production.TYPE_CACHE == 'REDIS'
-    and Production.REDIS_HOST is not None
-    and Production.REDIS_PORT is not None
-):
-    cache = BaseCache.create_cache(
-        type_cache=Production.TYPE_CACHE,
-        kwargs={'host': Production.REDIS_HOST, 'port': Production.REDIS_PORT},
-    )
-else:
-    sys.exit(f'Передали не корректный кэш {Production.TYPE_CACHE=}')
+cache_data = ModelProdCache()  # type: ignore
+cache = BaseCache.create_cache(
+    type_cache=cache_data.CACHE_TYPE,
+    kwargs={'host': cache_data.CACHE_HOST, 'port': cache_data.CACHE_PORT},  # type: ignore
+)
 
 parse_weather = ParseWeather(cache=cache)
 

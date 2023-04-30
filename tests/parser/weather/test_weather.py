@@ -1,10 +1,9 @@
-import sys
 from pathlib import Path
 
 import pytest
 
-from config import Test
 from src.cache.base_cache import BaseCache
+from src.config import ModelTestsCache
 from src.parser.weather.weather import ParseWeather
 
 # Тестируем на сохранённой HTML Москвы
@@ -17,19 +16,11 @@ def pw(mocker):
     with Path(path_html_test).open(encoding='utf-8') as f:
         html = f.readlines()
 
-    if Test.TYPE_CACHE == 'DICT':
-        cache = BaseCache.create_cache(type_cache=Test.TYPE_CACHE)
-    elif (
-        Test.TYPE_CACHE == 'REDIS'
-        and Test.REDIS_HOST is not None
-        and Test.REDIS_PORT is not None
-    ):
-        cache = BaseCache.create_cache(
-            type_cache=Test.TYPE_CACHE,
-            kwargs={'host': Test.REDIS_HOST, 'port': Test.REDIS_PORT},
-        )
-    else:
-        sys.exit(f'Передали не корректный кэш {Test.TYPE_CACHE=}')
+    cache_data = ModelTestsCache()  # type: ignore
+    cache = BaseCache.create_cache(
+        type_cache=cache_data.CACHE_TYPE,
+        kwargs={'host': cache_data.CACHE_HOST, 'port': cache_data.CACHE_PORT},  # type: ignore
+    )
 
     parse_weather = ParseWeather(cache=cache)
 
