@@ -1,9 +1,13 @@
 import abc
 import datetime
 import logging
+import logging.config
 import sys
 from typing import Callable, Type
 
+from src.config import LOGGER_CONFIG
+
+logging.config.dictConfig(LOGGER_CONFIG)
 logger = logging.getLogger(__name__)
 
 
@@ -25,6 +29,7 @@ class BaseCache(abc.ABC):
     @classmethod
     def register(cls, name: str) -> Callable[[Type['BaseCache']], Type['BaseCache']]:
         def decorator(klass: Type['BaseCache']) -> Type['BaseCache']:
+            # breakpoint()
             logger.info(
                 "Зарегистрируем Cache '%s' под именем '%s'", klass.__name__, name
             )
@@ -38,6 +43,7 @@ class BaseCache(abc.ABC):
         klass = cls._REGISTRY.get(type_cache)
 
         if klass is None:
+            logger.exception('Кэш %s не зарегистрирован\n', type_cache)
             sys.exit(f'Кэш {type_cache=} не зарегистрирован')
 
         return klass(**kwargs)

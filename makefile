@@ -42,7 +42,7 @@ check: test format lint ## Fast check and fix
 
 .PHONY: up
 up:
-	poetry run python -m src.vk_bot.vk_bot
+	poetry run python -m src.app
 
 
 .PHONY: docker-up

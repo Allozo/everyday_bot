@@ -1,8 +1,14 @@
+import logging
+
 import requests
 from bs4 import BeautifulSoup
 
 from src.cache.base_cache import BaseCache
+from src.config import LOGGER_CONFIG
 from src.parser.weather.schemas import DailyWeather, WeatherHours
+
+logging.config.dictConfig(LOGGER_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class ParseWeather:
@@ -13,6 +19,7 @@ class ParseWeather:
         }
 
         # Будут храниться html-ки страниц, чтобы не спамить сервера запросами
+        logger.info('В качестве кэша выбран %s', cache.__class__.__name__)
         self.cache_town_soup = cache
 
     def _load_html_in_cache(self, town: str) -> None:
@@ -66,6 +73,11 @@ class ParseWeather:
         return res
 
     def get_weather_on_day(self, town: str) -> DailyWeather:
+        logger.info('Получим погоду для города %s', town)
+
+        if town not in self.dict_town_url:
+            logger.error('Город %s отсутствует среди списка возможных городов')
+
         if not self.cache_town_soup.get(town):
             self._load_html_in_cache(town)
 
@@ -81,6 +93,8 @@ class ParseWeather:
         ]
 
         res = DailyWeather(town_name=town, list_weather_hours=list_weather)
+
+        logger.info('Успешно получили погоду для города %s', town)
 
         return res
 
