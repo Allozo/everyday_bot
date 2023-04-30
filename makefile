@@ -43,3 +43,13 @@ check: test format lint ## Fast check and fix
 .PHONY: up
 up:
 	poetry run python -m src.vk_bot.vk_bot
+
+
+.PHONY: docker-up
+docker-up:
+	docker-compose up --build -d
+
+
+.PHONY: docker-tests
+docker-tests:
+	docker-compose -f docker-compose-test.yaml up --build -d
