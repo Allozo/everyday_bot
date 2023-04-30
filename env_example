@@ -1,0 +1,5 @@
+VK_BOT_TOKEN=...
+
+CACHE_TYPE=REDIS  # Возможные варианты: DICT, REDIS (только для докера)
+CACHE_HOST=redis
+CACHE_PORT=6379
