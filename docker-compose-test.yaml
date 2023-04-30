@@ -1,21 +1,16 @@
 version: '3.8'
 
 services:
-  test_parse_weather_redis:
+  test_parse_weather_dict:
     container_name: test_parse_weather
+    env_file:
+      - config/.env.test
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - TEST_TYPE_CACHE=DICT
     volumes:
       - test_parse_weather:/home/code/logs
     command: poetry run python -m pytest --cov=src tests/
-    networks:
-      - test_everyday_bot
-
-networks:
-  test_everyday_bot:
 
 volumes:
   test_parse_weather:
