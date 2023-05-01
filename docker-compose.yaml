@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - everyday_bot:/home/code/logs
-    command: poetry run python -m src.vk_bot.vk_bot
+    command: poetry run python -m src.app
     networks:
       - everyday_bot
     depends_on:

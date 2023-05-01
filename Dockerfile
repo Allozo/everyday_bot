@@ -33,5 +33,3 @@ RUN poetry config virtualenvs.create false \
     && poetry install $(if test "$ENVIRONMENT" = production; then echo "--only main"; fi) --no-interaction --no-ansi
 
 COPY . .
-
-# CMD ["poetry", "run", "python", "-m", "src.vk_bot.vk_bot"]

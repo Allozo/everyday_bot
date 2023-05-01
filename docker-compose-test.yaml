@@ -8,9 +8,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - test_parse_weather:/home/code/logs
     command: poetry run python -m pytest --cov=src tests/
-
-volumes:
-  test_parse_weather:

@@ -1,3 +1,6 @@
+import json
+from typing import Any
+
 from pydantic import BaseSettings
 
 
@@ -33,3 +36,7 @@ class ModelTestsCache(ModelBaseCache):
     class Config:
         env_file = './config/.env.test'
         env_file_encoding = 'utf-8'
+
+
+with open('logger_config.json', 'r', encoding='utf-8') as file:
+    LOGGER_CONFIG: dict[str, Any] = json.load(file)

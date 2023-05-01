@@ -7,10 +7,11 @@ from typing import Callable, Type
 import vk_api
 
 from src.cache.base_cache import BaseCache
-from src.config import ModelProdCache
+from src.config import LOGGER_CONFIG, ModelProdCache
 from src.parser.weather.weather import ParseWeather
 from src.vk_bot.keyboard import KeyboardBot
 
+logging.config.dictConfig(LOGGER_CONFIG)
 logger = logging.getLogger(__name__)
 
 cache_data = ModelProdCache()  # type: ignore
@@ -80,7 +81,8 @@ class ExitHandler(MessageHandler):
             random_id=hash(str(datetime.now())),
             keyboard=KeyboardBot()(),
         )
-        logger.info('Пользователь %d завершил работу', user_id)
+        logger.info('Пользователь %d завершил работу\n', user_id)
+        print(f'Пользователь {user_id} завершил работу\n')
         sys.exit()
 
 
