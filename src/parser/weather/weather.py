@@ -1,4 +1,6 @@
+import json
 import logging
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,14 +15,19 @@ logger = logging.getLogger(__name__)
 
 class ParseWeather:
     def __init__(self, cache: BaseCache) -> None:
-        self.dict_town_url = {
-            'Москва': 'https://www.gismeteo.ru/weather-moscow-4368/',
-            'Санкт-Петербург': 'https://www.gismeteo.ru/weather-sankt-peterburg-4079/',
-        }
+        self.dict_town_url = self._load_town_url()
 
         # Будут храниться html-ки страниц, чтобы не спамить сервера запросами
         logger.info('В качестве кэша выбран %s', cache.__class__.__name__)
         self.cache_town_soup = cache
+
+    def _load_town_url(self) -> dict[str, str]:
+        with Path('src/parser/weather/town_url.json').open(
+            'r', encoding='utf-8'
+        ) as file:
+            data = json.load(file)
+
+        return data
 
     def _load_html_in_cache(self, town: str) -> None:
         header = {
